@@ -1,0 +1,8 @@
+{
+    "git.ignoreLimitWarning": true,
+    "python.analysis.extraPaths": [
+        "./qr_project/qr_project/qr-app/amazing-qr/amz",
+        "./qr_project/qr_project/qr-app/amazing-qr/amz",
+        "./qr_project/qr_project/qr-app/amazing-qr/amzqr/amz"
+    ]
+}
