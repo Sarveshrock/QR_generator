@@ -1,0 +1,7 @@
+{% for qr in qr_codes %}
+    <div>
+        <p>QR Code for: {{ qr.words }}</p>
+        <img src="{{ qr.qr_code_image.url }}" alt="QR Code for {{ qr.words }}">
+        <p>Generated at: {{ qr.created_at }}</p>
+    </div>
+{% endfor %}

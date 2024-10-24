@@ -1,44 +1,215 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generate QR Code</title>
-  </head>
-  <body>
-    <h1>Generate a Custom QR Code</h1>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <label for="words">Text for QR code:</label>
-        <input type="text" id="words" name="words" required>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #76BA99, #F3EAC2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .wrapper {
+            display: flex;
+            width: 80%;
+            max-width: 1200px;
+            height: auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            padding: 2rem;
+            width: 50%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        label {
+            margin-top: 1rem;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            margin-top: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            border-color: #76BA99;
+            box-shadow: 0 0 8px rgba(118, 186, 153, 0.3);
+        }
+
+        input[type="checkbox"] {
+            margin-left: 0.5rem;
+            transform: scale(1.2);
+        }
+
+        button {
+            margin-top: 1.5rem;
+            width: 100%;
+            padding: 1rem;
+            background-color: #76BA99;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #5AAE8B;
+            transform: translateY(-3px);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .download-link {
+            margin-top: 1rem;
+            display: block;
+            text-align: center;
+            background-color: #76BA99;
+            color: white;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .download-link:hover {
+            background-color: #5AAE8B;
+        }
+
+        .customise-button {
+            margin-top: 1rem;
+            background-color: #007BFF;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .customise-button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- Left Side: Form -->
+        <div class="container">
+            <h1>Generate a Custom QR Code</h1>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="words">URL for QR code:</label>
+                    <input type="text" id="words" name="words" required placeholder="Enter the text for QR code">
+                </div>
+
+                <div class="form-group">
+                    <label for="version">Version:</label>
+                    <input type="number" id="version" name="version" value="1" required min="1" max="40">
+                </div>
+
+                <div class="form-group">
+                    <label for="level">Error Correction Level:</label>
+                    <select id="level" name="level">
+                        <option value="L">L - Low</option>
+                        <option value="M">M - Medium</option>
+                        <option value="Q">Q - High</option>
+                        <option value="H" selected>H - Best</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="picture">Picture (optional):</label>
+                    <input type="file" id="picture" name="picture">
+                </div>
+
+                <div class="form-group">
+                    <label for="colorized">Colorized:</label>
+                    <input type="checkbox" id="colorized" name="colorized">
+                </div>
+
+                <div class="form-group">
+                    <label for="contrast">Contrast:</label>
+                    <input type="number" id="contrast" name="contrast" step="0.1" value="1.0">
+                </div>
+
+                <div class="form-group">
+                    <label for="brightness">Brightness:</label>
+                    <input type="number" id="brightness" name="brightness" step="0.1" value="1.0">
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Save as (optional):</label>
+                    <input type="text" id="name" name="name" placeholder="qr_code">
+                </div>
+
+                <button type="submit">Generate QR</button>
+                <p class="note">* Picture and colorized options are optional.</p>
+            </form>
+        </div>
+
+        <!-- Right Side: QR Code Preview -->
+        <div class="qr-preview">
+            {% if qr_code_url %}
+                <img src="{{ qr_code_url }}" alt="Generated QR Code">
+                <a href="{{ qr_code_url }}" class="download-link" download>Download QR Code</a>
+
+                <!-- Customise Button -->
+                <a href="{% url 'Customize' %}" class="customise-button">CUSTOMISE</a>
+
+            {% else %}
+                <p class="qr-placeholder">Your generated QR code will appear here</p>
+            {% endif %}
+        </div>
+    </div>
     
-        <label for="version">Version:</label>
-        <input type="number" id="version" name="version" value="1" required>
-    
-        <label for="level">Error Correction Level:</label>
-        <select id="level" name="level">
-            <option value="L">L</option>
-            <option value="M">M</option>
-            <option value="Q">Q</option>
-            <option value="H" selected>H</option>
-        </select>
-    
-        <label for="picture">Picture (optional):</label>
-        <input type="file" id="picture" name="picture">
-    
-        <label for="colorized">Colorized:</label>
-        <input type="checkbox" id="colorized" name="colorized">
-    
-        <label for="contrast">Contrast:</label>
-        <input type="number" id="contrast" name="contrast" step="0.1" value="1.0">
-    
-        <label for="brightness">Brightness:</label>
-        <input type="number" id="brightness" name="brightness" step="0.1" value="1.0">
-    
-        <label for="name">Save as (optional):</label>
-        <input type="text" id="name" name="name" placeholder="qr_code">
-    
-        <button type="submit">Generate QR</button>
-    </form>
-    
-  </body>
+    {% if error %}
+        <script>
+            alert("{{ error }}");
+        </script>
+    {% endif %}
+</body>
 </html>

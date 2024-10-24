@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customize QR Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .customization-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .option-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            flex: 1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-section h3 {
+            margin-top: 0;
+        }
+
+        .eyes-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .eye-option {
+            border: 2px solid transparent;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .eye-option.selected {
+            border-color: green;
+        }
+
+        .eye-option img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .qr-preview {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        .buttons button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .download-options {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .download-options input {
+            margin-right: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Customize your QR Code</h1>
+
+        <!-- Customization section -->
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- Select Pattern (this could be further extended as per your needs) -->
+    <label for="eye_style">Select Eye Style</label>
+    <select name="eye_style" id="eye_style">
+        {% for value, name in eye_styles %}
+        <option value="{{ value }}">{{ name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Add Logo -->
+    <label for="logo">Add a Logo</label>
+    <input type="file" name="logo" id="logo">
+
+    <!-- Foreground Color -->
+    <label for="foreground_color">Foreground Color</label>
+    <input type="color" name="foreground_color" id="foreground_color" value="#000000">
+
+    <!-- Background Color -->
+    <label for="background_color">Background Color</label>
+    <input type="color" name="background_color" id="background_color" value="#FFFFFF">
+
+    <!-- Frame -->
+    <label for="frame">Add a Frame</label>
+    <input type="checkbox" name="frame" id="frame" value="yes"> Add frame
+
+    <button type="submit">Generate QR Code</button>
+</form>
+
+<!-- QR Code Preview -->
+{% if qr_code_url %}
+<h3>QR Code Preview</h3>
+<img src="{{ qr_code_url }}" alt="QR Code Preview">
+{% endif %}
+
+        <!-- Download options -->
+        <div class="buttons">
+            <button onclick="downloadQR()">Download</button>
+        </div>
+        <div class="download-options">
+            <input type="radio" id="png" name="fileType" value="PNG" checked>
+            <label for="png">PNG</label>
+            <input type="radio" id="svg" name="fileType" value="SVG">
+            <label for="svg">SVG</label>
+            <input type="radio" id="pdf" name="fileType" value="PDF">
+            <label for="pdf">PDF</label>
+            <input type="radio" id="eps" name="fileType" value="EPS">
+            <label for="eps">EPS</label>
+        </div>
+    </div>
+
+    <script>
+        function selectEyeStyle(element) {
+            // Remove selected class from all elements
+            const allEyes = document.querySelectorAll('.eye-option');
+            allEyes.forEach(el => el.classList.remove('selected'));
+
+            // Add selected class to clicked element
+            element.classList.add('selected');
+
+            // Update the QR code preview accordingly
+            // You can modify the src attribute of the #qr-image element here based on the selected eye style
+        }
+
+        function downloadQR() {
+            const fileType = document.querySelector('input[name="fileType"]:checked').value;
+            alert('Downloading as ' + fileType);
+            // Add functionality to download the customized QR code in the selected format
+        }
+    </script>
+</body>
+</html>
