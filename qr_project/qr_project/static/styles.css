@@ -1,0 +1,78 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+}
+
+.step {
+    margin-bottom: 20px;
+}
+
+input[type="text"], input[type="file"], input[type="color"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.radio-options {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.customization-section {
+    margin-bottom: 20px;
+}
+
+.pattern-options, .eye-options {
+    display: flex;
+    gap: 10px;
+}
+
+.pattern-btn, .eye-btn {
+    padding: 10px;
+    background-color: #ddd;
+    border: 1px solid #aaa;
+    cursor: pointer;
+}
+
+.pattern-btn:hover, .eye-btn:hover {
+    background-color: #ccc;
+}
+
+#qr-preview {
+    margin: 20px auto;
+    width: 200px;
+    height: 200px;
+    border: 1px solid #ccc;
+}
