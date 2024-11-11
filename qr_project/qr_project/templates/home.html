@@ -106,13 +106,16 @@
 
     <nav>
         <h1>QR Code Generator</h1>
-        <a href="#">Home</a>
+        
+        <a href="{% url 'signin' %}">Login</a>
+
     </nav>
 
     <div class="content">
         <h1>Welcome to the QR Code Generator</h1>
         <p>Easily generate custom QR codes with a few clicks.</p>
-        <a class="btn" href="{% url 'generate_qr' %}">Generate QR Code</a>
+        <a class="btn" href="{% url 'generate_qr' %}">Quick QR Code</a>
+        <a class="btn" href="{% url 'Customize' %}">Customised QR</a>
     </div>
 
     <footer>

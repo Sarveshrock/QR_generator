@@ -1,175 +1,217 @@
+{% load static %} 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customize QR Code</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            padding: 20px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Customizer</title>
+  <style>
+    /* CSS styles */
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f5f5f5;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    .container {
+      display: flex;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      max-width: 800px;
+      width: 100%;
+    }
 
-        .section-title {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-        }
+    .form-container {
+      width: 50%;
+      padding-right: 20px;
+      text-align: left;
+    }
 
-        .customization-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
+    .qr-container {
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
 
-        .option-section {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            flex: 1;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: #333;
+      text-align: center;
+    }
 
-        .option-section h3 {
-            margin-top: 0;
-        }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      color: #333;
+      font-weight: bold;
+    }
 
-        .eyes-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
+    input[type="text"], input[type="color"], input[type="number"], select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
 
-        .eye-option {
-            border: 2px solid transparent;
-            border-radius: 4px;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color 0.3s ease;
-        }
+    .download-buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
 
-        .eye-option.selected {
-            border-color: green;
-        }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
 
-        .eye-option img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .qr-preview {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            display: inline-block;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-        }
-
-        .buttons {
-            margin-top: 20px;
-        }
-
-        .buttons button {
-            padding: 10px 20px;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-
-        .download-options {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .download-options input {
-            margin-right: 5px;
-        }
-
-    </style>
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <div class="form-container">
+      <h1>QR Code Customizer</h1>
+      <form id="qrForm">
+        <label for="qrData">Data</label>
+        <input type="text" id="qrData" name="qrData" placeholder="Enter text for QR code" required>
 
-    <div class="container">
-        <h1>Customize your QR Code</h1>
+        <label for="dotsColor">Dots Color</label>
+        <input type="color" id="dotsColor" name="dotsColor" value="#000000">
 
-        <!-- Customization section -->
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+        <label for="bgColor">Background Color</label>
+        <input type="color" id="bgColor" name="bgColor" value="#ffffff">
 
-    <!-- Select Pattern (this could be further extended as per your needs) -->
-    <label for="eye_style">Select Eye Style</label>
-    <select name="eye_style" id="eye_style">
-        {% for value, name in eye_styles %}
-        <option value="{{ value }}">{{ name }}</option>
-        {% endfor %}
-    </select>
+        <label for="cornersSquareColor">Corners Square Color</label>
+        <input type="color" id="cornersSquareColor" name="cornersSquareColor" value="#000000">
 
-    <!-- Add Logo -->
-    <label for="logo">Add a Logo</label>
-    <input type="file" name="logo" id="logo">
+        <label for="cornersDotColor">Corners Dot Color</label>
+        <input type="color" id="cornersDotColor" name="cornersDotColor" value="#000000">
 
-    <!-- Foreground Color -->
-    <label for="foreground_color">Foreground Color</label>
-    <input type="color" name="foreground_color" id="foreground_color" value="#000000">
+        <label for="dotsType">Dots Type</label>
+        <select id="dotsType">
+          <option value="dots">dots</option>
+          <option value="rounded">rounded</option>
+          <option value="classy">classy</option>
+          <option value="classy-rounded">classy-rounded</option>
+          <option value="square">square</option>
+          <option value="extra-rounded">extra-rounded</option>
+        </select>
 
-    <!-- Background Color -->
-    <label for="background_color">Background Color</label>
-    <input type="color" name="background_color" id="background_color" value="#FFFFFF">
+        <label for="cornersSquareType">Corners Square Type</label>
+        <select id="cornersSquareType">
+          <option value="dot">dot</option>
+          <option value="square">square</option>
+          <option value="extra-rounded">extra-rounded</option>
+        </select>
 
-    <!-- Frame -->
-    <label for="frame">Add a Frame</label>
-    <input type="checkbox" name="frame" id="frame" value="yes"> Add frame
+        <label for="cornersDotType">Corners Dot Type</label>
+        <select id="cornersDotType">
+          <option value="dot">dot</option>
+          <option value="square">square</option>
+        </select>
 
-    <button type="submit">Generate QR Code</button>
-</form>
+        <label for="margin">Margin</label>
+        <input type="number" id="margin" name="margin" min="0" max="10" value="2">
 
-<!-- QR Code Preview -->
-{% if qr_code_url %}
-<h3>QR Code Preview</h3>
-<img src="{{ qr_code_url }}" alt="QR Code Preview">
-{% endif %}
-
-        <!-- Download options -->
-        <div class="buttons">
-            <button onclick="downloadQR()">Download</button>
-        </div>
-        <div class="download-options">
-            <input type="radio" id="png" name="fileType" value="PNG" checked>
-            <label for="png">PNG</label>
-            <input type="radio" id="svg" name="fileType" value="SVG">
-            <label for="svg">SVG</label>
-            <input type="radio" id="pdf" name="fileType" value="PDF">
-            <label for="pdf">PDF</label>
-            <input type="radio" id="eps" name="fileType" value="EPS">
-            <label for="eps">EPS</label>
-        </div>
+        <label for="size">Size</label>
+        <input type="number" id="size" name="size" min="100" max="500" value="200">
+      </form>
     </div>
+    
+    <div class="qr-container">
+      <div id="qrCodeContainer"></div>
+      <div class="download-buttons">
+        <button id="downloadPng">Download as PNG</button>
+        <button id="downloadSvg">Download as SVG</button>
+      </div>
+    </div>
+  </div>
 
-    <script>
-        function selectEyeStyle(element) {
-            // Remove selected class from all elements
-            const allEyes = document.querySelectorAll('.eye-option');
-            allEyes.forEach(el => el.classList.remove('selected'));
+  <!-- JavaScript to generate QR code with customization options -->
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling/lib/qr-code-styling.js"></script>
+  <script>
+    let qrCode;
 
-            // Add selected class to clicked element
-            element.classList.add('selected');
+    function createQRCode() {
+      const data = document.getElementById("qrData").value;
+      const dotsColor = document.getElementById("dotsColor").value;
+      const bgColor = document.getElementById("bgColor").value;
+      const cornersSquareColor = document.getElementById("cornersSquareColor").value;
+      const cornersDotColor = document.getElementById("cornersDotColor").value;
+      const dotsType = document.getElementById("dotsType").value;
+      const cornersSquareType = document.getElementById("cornersSquareType").value;
+      const cornersDotType = document.getElementById("cornersDotType").value;
+      const margin = parseInt(document.getElementById("margin").value);
+      const size = parseInt(document.getElementById("size").value);
 
-            // Update the QR code preview accordingly
-            // You can modify the src attribute of the #qr-image element here based on the selected eye style
+      // Clear previous QR code
+      document.getElementById("qrCodeContainer").innerHTML = "";
+
+      // Create QR code with styling options
+      qrCode = new QRCodeStyling({
+        width: size,
+        height: size,
+        data: data,
+        type: "svg",
+        margin: margin,
+        dotsOptions: {
+          color: dotsColor,
+          type: dotsType
+        },
+        backgroundOptions: {
+          color: bgColor
+        },
+        cornersSquareOptions: {
+          type: cornersSquareType,
+          color: cornersSquareColor
+        },
+        cornersDotOptions: {
+          type: cornersDotType,
+          color: cornersDotColor
+        },
+        qrOptions: {
+          errorCorrectionLevel: "Q"
         }
+      });
 
-        function downloadQR() {
-            const fileType = document.querySelector('input[name="fileType"]:checked').value;
-            alert('Downloading as ' + fileType);
-            // Add functionality to download the customized QR code in the selected format
-        }
-    </script>
+      // Append QR code to container
+      qrCode.append(document.getElementById("qrCodeContainer"));
+    }
+
+    // Initialize QR code with default values
+    createQRCode();
+
+    // Add event listeners to update QR code automatically on form input changes
+    document.getElementById("qrForm").addEventListener("input", createQRCode);
+
+    // Download QR code as PNG
+    document.getElementById("downloadPng").addEventListener("click", function() {
+      qrCode.download({ name: "qr_code", extension: "png" });
+    });
+
+    // Download QR code as SVG
+    document.getElementById("downloadSvg").addEventListener("click", function() {
+      qrCode.download({ name: "qr_code", extension: "svg" });
+    });
+  </script>
 </body>
 </html>

@@ -1,0 +1,98 @@
+{% block content %}
+    <div class="dashboard-container">
+        <h1 class="dashboard-title">Welcome to Your Dashboard</h1>
+
+        <h2 class="qr-heading">Your Generated QR Codes</h2>
+        
+        {% if qr_codes %}
+            <div class="table-container">
+                <table class="qr-table">
+                    <thead>
+                        <tr>
+                            <th>QR Code</th>
+                            <th>Text/URL</th>
+                            <th>Generated At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for qr in qr_codes %}
+                            <tr>
+                                <td><img src="{{ qr.qr_code_image.url }}" alt="QR Code" class="qr-image"></td>
+                                <td>{{ qr.words }}</td>
+                                <td>{{ qr.generated_at }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="no-qr-message">You haven't generated any QR codes yet.</p>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block styles %}
+    <style>
+        /* General dashboard styles */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .qr-heading {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #5a5a5a;
+        }
+
+        /* Table styles */
+        .table-container {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        .qr-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .qr-table th, .qr-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .qr-table th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        .qr-table td img {
+            width: 80px;
+            height: 80px;
+            border-radius: 5px;
+        }
+
+        /* No QR message */
+        .no-qr-message {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+        }
+    </style>
+{% endblock %}
